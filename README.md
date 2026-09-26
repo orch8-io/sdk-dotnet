@@ -8,8 +8,8 @@ durable workflow engine.
 - **`Orch8.Sdk.Hosting`** (net8.0): `IHostedService` / DI integration for the Generic Host.
 
 The worker implements the normative Orch8 worker wire protocol (contract version 1) and passes all
-17 scenarios of the Orch8 SDK conformance kit. The kit is not public yet, so conformance runs are
-local-only; CI runs the unit tests.
+17 scenarios of the Orch8 SDK conformance kit ([orch8-io/sdk-contract](https://github.com/orch8-io/sdk-contract)). CI runs the unit tests;
+conformance runs from a checkout of the kit next to this repo.
 
 ## Install
 
@@ -233,8 +233,7 @@ Requires the .NET 8 SDK or newer. The libraries target `net8.0`. The test and ad
 dotnet build
 dotnet test                                                   # unit tests (xUnit, in-memory fake engine)
 
-# conformance kit: local only (needs Node >= 20 and the non-public ../sdk-contract checkout;
-# not run in CI)
+# conformance kit: needs Node >= 20 and github.com/orch8-io/sdk-contract cloned to ../sdk-contract
 dotnet build conformance/Orch8.Sdk.Conformance -c Release
 cd ../sdk-contract && node conformance/run.mjs --adapter "$PWD/../sdk-dotnet/bin/conformance"
 ```
