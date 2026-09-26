@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Conformance adapter entry point for sdk-contract/conformance/run.mjs.
+# Usage: bin/conformance <worker|push|verify|client>
+# Build once beforehand:
+#   dotnet build conformance/Orch8.Sdk.Conformance -c Release
+set -eu
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DLL="$ROOT/conformance/Orch8.Sdk.Conformance/bin/Release/net8.0/Orch8.Sdk.Conformance.dll"
+if [ ! -f "$DLL" ]; then
+  echo "building conformance adapter (first run)..." >&2
+  dotnet build "$ROOT/conformance/Orch8.Sdk.Conformance" -c Release -nologo -v quiet >&2
+fi
+exec dotnet "$DLL" "$@"

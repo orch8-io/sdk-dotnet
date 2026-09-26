@@ -1,0 +1,16 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+!/bin/
+/bin/*
+!/bin/conformance
+artifacts/
+TestResults/
+*.user
+*.suo
+.vs/
+.idea/
+*.nupkg
+*.snupkg
+coverage*.xml
+.DS_Store
