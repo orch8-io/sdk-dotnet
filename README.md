@@ -24,16 +24,21 @@ mkdir -p ~/.nuget/local-orch8
 gh release download v0.1.0 -R orch8-io/sdk-dotnet -p '*.nupkg' -D ~/.nuget/local-orch8
 # or download Orch8.Sdk.0.1.0.nupkg (and Orch8.Sdk.Hosting.0.1.0.nupkg) from the release page
 
-dotnet add package Orch8.Sdk --version 0.1.0 --source ~/.nuget/local-orch8
-dotnet add package Orch8.Sdk.Hosting --version 0.1.0 --source ~/.nuget/local-orch8   # optional
+# register the folder as an extra source (nuget.org stays enabled for the dependencies)
+dotnet nuget add source ~/.nuget/local-orch8 --name orch8-local
+
+dotnet add package Orch8.Sdk --version 0.1.0
+dotnet add package Orch8.Sdk.Hosting --version 0.1.0   # optional
 ```
 
-To make restores work without `--source` (e.g. in CI), add the folder to a `nuget.config` next to
-your solution:
+Don't use `dotnet add package --source <folder>` for this: `--source` replaces nuget.org, so the
+`Microsoft.Extensions.*` dependencies fail to restore. For a repo-local feed (e.g. for CI), commit
+the `.nupkg` files and a `nuget.config` next to your solution:
 
 ```xml
 <configuration>
   <packageSources>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
     <add key="orch8-local" value="./packages/orch8" />
   </packageSources>
 </configuration>
