@@ -8,5 +8,8 @@
     <Authors>Orch8</Authors>
     <Copyright>Copyright (c) Orch8</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://orch8.io</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/orch8-io/sdk-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 </Project>
