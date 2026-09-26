@@ -7,17 +7,49 @@ durable workflow engine.
   push-signature verifier and push receiver. Its only dependency is `Microsoft.Extensions.Logging.Abstractions`.
 - **`Orch8.Sdk.Hosting`** (net8.0): `IHostedService` / DI integration for the Generic Host.
 
-The worker implements the normative [worker wire protocol](../sdk-contract/WORKER_PROTOCOL.md)
-(contract version 1) and passes all 17 scenarios of the `sdk-contract` conformance kit.
+The worker implements the normative Orch8 worker wire protocol (contract version 1) and passes all
+17 scenarios of the Orch8 SDK conformance kit. The kit is not public yet, so conformance runs are
+local-only; CI runs the unit tests.
 
 ## Install
+
+### Today: local feed from the GitHub release
+
+The packages are not on nuget.org yet. Download them from the
+[v0.1.0 GitHub release](https://github.com/orch8-io/sdk-dotnet/releases/tag/v0.1.0) into a folder
+and use it as a package source:
+
+```bash
+mkdir -p ~/.nuget/local-orch8
+gh release download v0.1.0 -R orch8-io/sdk-dotnet -p '*.nupkg' -D ~/.nuget/local-orch8
+# or download Orch8.Sdk.0.1.0.nupkg (and Orch8.Sdk.Hosting.0.1.0.nupkg) from the release page
+
+dotnet add package Orch8.Sdk --version 0.1.0 --source ~/.nuget/local-orch8
+dotnet add package Orch8.Sdk.Hosting --version 0.1.0 --source ~/.nuget/local-orch8   # optional
+```
+
+To make restores work without `--source` (e.g. in CI), add the folder to a `nuget.config` next to
+your solution:
+
+```xml
+<configuration>
+  <packageSources>
+    <add key="orch8-local" value="./packages/orch8" />
+  </packageSources>
+</configuration>
+```
+
+The release also carries `.snupkg` symbol packages for debugging.
+
+### Once on nuget.org
 
 ```bash
 dotnet add package Orch8.Sdk            # client + worker + push
 dotnet add package Orch8.Sdk.Hosting    # optional Generic Host integration
 ```
 
-(Not published yet: reference the projects under `src/` directly for now.)
+The release workflow pushes both packages to nuget.org when the `NUGET_API_KEY` repository secret
+is set; without it that step is skipped.
 
 ## Client
 
@@ -196,7 +228,8 @@ Requires the .NET 8 SDK or newer. The libraries target `net8.0`. The test and ad
 dotnet build
 dotnet test                                                   # unit tests (xUnit, in-memory fake engine)
 
-# conformance kit (needs Node >= 20 and ../sdk-contract)
+# conformance kit: local only (needs Node >= 20 and the non-public ../sdk-contract checkout;
+# not run in CI)
 dotnet build conformance/Orch8.Sdk.Conformance -c Release
 cd ../sdk-contract && node conformance/run.mjs --adapter "$PWD/../sdk-dotnet/bin/conformance"
 ```
